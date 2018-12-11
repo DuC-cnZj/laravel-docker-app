@@ -5,7 +5,7 @@ LABEL maintainer="ducong"
 ENV DEBIAN_FRONTEND=noninteractive
 
 ENV TZ=Asia/Shanghai
-ENV PHP_VERSION=7.2
+ENV PHP_VERSION=7.3
 
 COPY sources.list /etc/apt/sources.list
 
