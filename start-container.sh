@@ -18,28 +18,28 @@ chmod 600 /var/spool/cron/crontabs/root
 touch /var/log/cron.log
 /etc/init.d/cron start
 
-sed -i "s/xdebug\.remote_host\=.*/xdebug\.remote_host\=$XDEBUG_HOST/g" /etc/php/7.2/mods-available/xdebug.ini
+sed -i "s/xdebug\.remote_host\=.*/xdebug\.remote_host\=$XDEBUG_HOST/g" /etc/php/$PHP_VERSION/mods-available/xdebug.ini
 sed -i 's/;daemonize = yes/daemonize = no/g'  /etc/php/$PHP_VERSION/fpm/php-fpm.conf
 
 if [ ! "production" == "$APP_ENV" ] && [ ! "prod" == "$APP_ENV" ]; then
     # Enable xdebug
 
     ## FPM
-    ln -sf /etc/php/7.2/mods-available/xdebug.ini /etc/php/7.2/fpm/conf.d/20-xdebug.ini
+    ln -sf /etc/php/$PHP_VERSION/mods-available/xdebug.ini /etc/php/$PHP_VERSION/fpm/conf.d/20-xdebug.ini
 
     ## CLI
-    ln -sf /etc/php/7.2/mods-available/xdebug.ini /etc/php/7.2/cli/conf.d/20-xdebug.ini
+    ln -sf /etc/php/$PHP_VERSION/mods-available/xdebug.ini /etc/php/$PHP_VERSION/cli/conf.d/20-xdebug.ini
 else
     # Disable xdebug
 
     ## FPM
-    if [ -e /etc/php/7.2/fpm/conf.d/20-xdebug.ini ]; then
-        rm -f /etc/php/7.2/fpm/conf.d/20-xdebug.ini
+    if [ -e /etc/php/$PHP_VERSION/fpm/conf.d/20-xdebug.ini ]; then
+        rm -f /etc/php/$PHP_VERSION/fpm/conf.d/20-xdebug.ini
     fi
 
     ## CLI
-    if [ -e /etc/php/7.2/cli/conf.d/20-xdebug.ini ]; then
-        rm -f /etc/php/7.2/cli/conf.d/20-xdebug.ini
+    if [ -e /etc/php/$PHP_VERSION/cli/conf.d/20-xdebug.ini ]; then
+        rm -f /etc/php/$PHP_VERSION/cli/conf.d/20-xdebug.ini
     fi
 fi
 
