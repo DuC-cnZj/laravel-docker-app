@@ -5,23 +5,25 @@ LABEL maintainer="ducong"
 ENV DEBIAN_FRONTEND=noninteractive
 
 ENV TZ=Asia/Shanghai
+ENV PHP_VERSION=7.2
 
 COPY sources.list /etc/apt/sources.list
 
 RUN apt-get update \
-    && apt-get install -y gnupg tzdata \
+    && apt-get install -y gnupg tzdata software-properties-common gettext-base \
     && dpkg-reconfigure -f noninteractive tzdata \
     && ln -snf /usr/share/zoneinfo/$TZ /etc/localtime \
     && echo $TZ > /etc/timezone
 
 RUN apt-get update --fix-missing\
-    && apt-get install -y curl zip unzip git supervisor sqlite3 cron \
-       nginx php7.2-fpm php7.2-cli \
-       php7.2-pgsql php7.2-sqlite3 php7.2-gd \
-       php7.2-curl php7.2-memcached \
-       php7.2-imap php7.2-mysql php7.2-mbstring \
-       php7.2-xml php7.2-zip php7.2-bcmath php7.2-soap php-mongodb \
-       php7.2-intl php7.2-readline php7.2-xdebug \
+    && add-apt-repository ppa:ondrej/php \
+    && apt-get install -y curl zip unzip git supervisor vim sqlite3 cron \
+       nginx php$PHP_VERSION-fpm php$PHP_VERSION-cli \
+       php$PHP_VERSION-pgsql php$PHP_VERSION-sqlite3 php$PHP_VERSION-gd \
+       php$PHP_VERSION-curl php$PHP_VERSION-memcached \
+       php$PHP_VERSION-imap php$PHP_VERSION-mysql php$PHP_VERSION-mbstring \
+       php$PHP_VERSION-xml php$PHP_VERSION-zip php$PHP_VERSION-bcmath php$PHP_VERSION-soap php-mongodb \
+       php$PHP_VERSION-intl php$PHP_VERSION-readline php$PHP_VERSION-xdebug \
        php-msgpack php-igbinary \
     && php -r "copy('https://install.phpcomposer.com/installer', 'composer-setup.php');" \
     && php composer-setup.php \
@@ -37,10 +39,9 @@ RUN ln -sf /dev/stdout /var/log/nginx/access.log \
     && ln -sf /dev/stderr /var/log/nginx/error.log
 
 COPY laravel-schedule.cron /var/spool/cron/crontabs/root
-COPY xdebug.ini /etc/php/7.2/mods-available/xdebug.ini
+COPY xdebug.ini /etc/php/$PHP_VERSION/mods-available/xdebug.ini
 COPY default /etc/nginx/sites-available/default
 COPY supervisord.conf /etc/supervisor/conf.d/supervisord.conf
-COPY php-fpm.conf /etc/php/7.2/fpm/php-fpm.conf
 COPY start-container.sh /usr/bin/start-container
 RUN chmod +x /usr/bin/start-container
 

@@ -19,6 +19,7 @@ touch /var/log/cron.log
 /etc/init.d/cron start
 
 sed -i "s/xdebug\.remote_host\=.*/xdebug\.remote_host\=$XDEBUG_HOST/g" /etc/php/7.2/mods-available/xdebug.ini
+sed -i 's/;daemonize = yes/daemonize = no/g'  /etc/php/$PHP_VERSION/fpm/php-fpm.conf
 
 if [ ! "production" == "$APP_ENV" ] && [ ! "prod" == "$APP_ENV" ]; then
     # Enable xdebug
