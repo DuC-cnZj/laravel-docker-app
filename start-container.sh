@@ -12,11 +12,9 @@ if [ ! -z $BASH_NAMES ]; then
     done
 fi
 
-composer config -g repo.packagist composer https://packagist.laravel-china.org
-chown -R root:crontab /var/spool/cron/crontabs/root
-chmod 600 /var/spool/cron/crontabs/root
-touch /var/log/cron.log
 /etc/init.d/cron start
+
+composer config -g repo.packagist composer https://mirrors.aliyun.com/composer/
 
 [ "" !=  "${XDEBUG_HOST}" ] && sed -i "s/xdebug\.remote_host\=.*/xdebug\.remote_host\=${XDEBUG_HOST}/g" /etc/php/${PHP_VERSION}/mods-available/xdebug.ini
 [ "" !=  "${XDEBUG_PORT}" ] && sed -i "s/xdebug\.remote_port\=.*/xdebug\.remote_port\=${XDEBUG_PORT}/g" /etc/php/${PHP_VERSION}/mods-available/xdebug.ini
