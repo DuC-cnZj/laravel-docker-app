@@ -38,11 +38,15 @@ RUN apt-get update --fix-missing\
 RUN ln -sf /dev/stdout /var/log/nginx/access.log \
     && ln -sf /dev/stderr /var/log/nginx/error.log
 
-COPY laravel-schedule.cron /var/spool/cron/crontabs/root
+USER root
+
+COPY ./crontab /etc/cron.d
 COPY xdebug.ini /etc/php/$PHP_VERSION/mods-available/xdebug.ini
 COPY default /etc/nginx/sites-available/default
 COPY supervisord.conf /etc/supervisor/conf.d/supervisord.conf
 COPY start-container.sh /usr/bin/start-container
-RUN chmod +x /usr/bin/start-container
+
+RUN chmod -R 644 /etc/cron.d \
+    && chmod +x /usr/bin/start-container
 
 ENTRYPOINT ["start-container"]
